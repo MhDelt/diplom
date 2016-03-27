@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="org.scilab.modules.javasci">
+    <CLASSES>
+      <root url="jar://C:/Program Files/scilab-5.4.1/modules/javasci/jar/org.scilab.modules.javasci.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
