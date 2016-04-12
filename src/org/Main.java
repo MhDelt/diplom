@@ -3,6 +3,8 @@ package org;
 
 import java.net.InetAddress;
 import java.net.ServerSocket;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 /**
  * Created by Михаил on 13.03.2016.
@@ -10,6 +12,7 @@ import java.net.ServerSocket;
 
 public class Main{
 
+    static Executor e = Executors.newCachedThreadPool();
     public static void main(String[] args) {
         String adr = "localhost";
         ServerSocket srv;
@@ -20,7 +23,7 @@ public class Main{
             System.out.print("Server started\n");
 
                 while (true) {
-                new Server(i,srv.accept(),64);
+                e.execute(new Server(i,srv.accept(),1));
                 //System.out.print(i+"\n");
                 i++;
             }

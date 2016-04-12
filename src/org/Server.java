@@ -7,7 +7,7 @@ import java.util.concurrent.ExecutionException;
 /**
  * Created by Михаил on 22.03.2016.
  */
-public class Server extends Thread{
+public class Server implements Runnable{
 
     Socket socket;
     int number;
@@ -40,16 +40,13 @@ public class Server extends Thread{
     }
 
 
-        Server(int num, Socket socket, int bufferSizeInKb){
-            //Copy data
-            this.socket = socket;
-            this.number = num;
-            this.data = new byte[1024*bufferSizeInKb];
+    Server(int num, Socket socket, int bufferSizeInKb){
+           //Copy data
+        this.socket = socket;
+        this.number = num;
+        this.data = new byte[1024*bufferSizeInKb];
 
-            //start new thread
-            setDaemon(true);
-            setPriority(NORM_PRIORITY);
-            start();
+
     }
 
     public void recieveData() {
