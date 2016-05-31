@@ -6,6 +6,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -15,12 +17,12 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  */
 public class Channel implements Runnable {
 
-
+    ExecutorService e = Executors.newCachedThreadPool();
     public static final int BUFFER_SIZE = 1024;
     private final int inPortNum;
     private final int outPortNum;
     private final String outputAddress;
-    private final ChannelType channelType;
+    private final PortType channelType;
     InPort inPort;
     List<OutPort> outPort = new ArrayList<>();
     private ServerSocket srv;
@@ -33,7 +35,7 @@ public class Channel implements Runnable {
     private ReentrantLock lock;
     private Condition condtion;
 
-    public Channel(String virtBusAddress, String name, int inPortNum, int outPortNum, String outputAddres, ChannelType channelType, Integer rate) {
+    public Channel(String virtBusAddress, String name, int inPortNum, int outPortNum, String outputAddres, PortType channelType, Integer rate) {
         this.name = name;
         this.outPortNum = outPortNum;
         this.inPortNum = inPortNum;
@@ -57,11 +59,14 @@ public class Channel implements Runnable {
                 Socket socket = srv.accept();
                 PortFactory factory = PortFactory.getFactory(channelType);
                 inPort = factory.getInport(this, socket);
+                e.execute(inPort);
                 if (outPort.isEmpty()) {
-                    outPort.add(factory.getOutport(this));
+                    OutPort outport = factory.getOutport(this);
+                    e.execute(outport);
+                    outPort.add(outport);
                 }
 
-                System.out.print(i + "\n");
+                System.out.print(i + " "+data+"\n");
                 i++;
             }
         }catch (Exception e) {

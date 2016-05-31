@@ -69,14 +69,14 @@ public abstract class PortFactory {
         }
     };
 
-    private static Map<ChannelType, PortFactory> map = new HashMap<>();
+    private static Map<PortType, PortFactory> map = new HashMap<>();
     static {
-        map.put(ChannelType.ASYNCHRONOUS, asynch);
-        map.put(ChannelType.SYNCHRONOUS, synch);
-        map.put(ChannelType.DIRECT, direct);
-        map.put(ChannelType.ECHO,echo);
+        map.put(PortType.ASYNCHRONOUS, asynch);
+        map.put(PortType.SYNCHRONOUS, synch);
+        map.put(PortType.DIRECT, direct);
+        map.put(PortType.ECHO,echo);
     }
-    public static PortFactory getFactory(ChannelType channelType){
+    public static PortFactory getFactory(PortType channelType){
         return map.get(channelType);
     }
 

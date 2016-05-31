@@ -1,9 +1,5 @@
 package org;
 
-
-import java.net.InetAddress;
-import java.net.ServerSocket;
-import java.util.ArrayList;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -13,8 +9,6 @@ import java.util.concurrent.Executors;
 
 public class Main{
 
-    private volatile ArrayList<Byte> variables;
-
     static Executor e = Executors.newCachedThreadPool();
     public static void main(String[] args) {
         String adr = "localhost";
@@ -22,6 +16,7 @@ public class Main{
     }
 
     private static void createChannel(String adr) {
-
+        Channel c = new Channel(adr,"ch1",3128,3129,adr, PortType.ECHO,20);
+        c.run();
     }
 }

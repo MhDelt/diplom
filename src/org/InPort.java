@@ -4,7 +4,7 @@ import java.io.InputStream;
 import java.net.Socket;
 
 /**
- * Created by Михаил on 24.05.2016.
+ * Created by пїЅпїЅпїЅпїЅпїЅпїЅ on 24.05.2016.
  */
 public class InPort extends Port {
     Socket socket;
@@ -14,17 +14,17 @@ public class InPort extends Port {
         this.socket = socket;
     }
 
-
-
-
     public void run() {
 
         try {
             InputStream input = socket.getInputStream();
             while (channel.isActive()) {
                 channel.countOfBytes = input.read(channel.data);
-                for (OutPort outPort: channel.outPort) {
-                    outPort.write(channel.data, channel.countOfBytes);
+                if(channel.countOfBytes >0) {
+                    System.out.println(channel.data[0]);
+                    for (OutPort outPort : channel.outPort) {
+                        outPort.write(channel.data, channel.countOfBytes);
+                    }
                 }
             }
             //input.close();
