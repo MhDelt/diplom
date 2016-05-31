@@ -56,6 +56,10 @@ public class Channel implements Runnable {
             int i = 0;
 
             while (isActive()) {
+                if (inPort != null) {
+                    inPort.setActive(false);
+                }
+
                 Socket socket = srv.accept();
                 PortFactory factory = PortFactory.getFactory(channelType);
                 inPort = factory.getInport(this, socket);
@@ -66,6 +70,7 @@ public class Channel implements Runnable {
 
                 System.out.print(i + " "+data+"\n");
                 i++;
+                Thread.sleep(300);
             }
         }catch (Exception e) {
             System.out.print("Failed: " + e);

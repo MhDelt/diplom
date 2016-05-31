@@ -8,6 +8,7 @@ import java.net.Socket;
  */
 public class InPort extends Port {
     Socket socket;
+    boolean isActive = true;
 
     InPort(Channel channel, Socket socket) {
         super(channel);
@@ -19,7 +20,7 @@ public class InPort extends Port {
 
         try {
             InputStream input = socket.getInputStream();
-            while (channel.isActive()) {
+            while (this.isActive) {
                 channel.countOfBytes = input.read(channel.data);
                 if(channel.countOfBytes >0) {
                     System.out.println(channel.data[0]);
@@ -33,5 +34,13 @@ public class InPort extends Port {
             System.out.print("init error: " + e);
         }
 
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
     }
 }

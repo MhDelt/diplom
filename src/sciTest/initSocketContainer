@@ -1,5 +1,5 @@
-jc=mgetl(fullfile('', 'SocketContainer.java'));
-SocketContainer=jcompile("SocketContainer",jc);
-obj = SocketContainer.new()
-obj.init()
-exec('sendByObj.sce')
+    jc=mgetl(fullfile('', 'SocketContainer.java'));
+    SocketContainer=jcompile("SocketContainer",jc);
+    obj = SocketContainer.new()
+    obj.init()
+    exec('sendByObj.sce')

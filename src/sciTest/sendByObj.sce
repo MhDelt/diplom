@@ -1,4 +1,4 @@
-function [res]=sendByObj(x, t)
-       obj.write(x);
-       obj.read2();
+function [res]=sendByObj(t, u1)
+       obj.write(u1);
+       obj.read2(u1);
 endfunction
