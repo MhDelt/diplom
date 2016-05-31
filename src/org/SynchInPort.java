@@ -4,7 +4,7 @@ import java.io.InputStream;
 import java.net.Socket;
 
 /**
- * Created by Михаил on 24.05.2016.
+ * Created by пїЅпїЅпїЅпїЅпїЅпїЅ on 24.05.2016.
  */
 public class SynchInPort extends InPort {
     volatile byte data[] = new byte[Channel.BUFFER_SIZE]; //data
@@ -20,14 +20,16 @@ public class SynchInPort extends InPort {
             while (channel.isActive()) {
 
                 countOfBytes = input.read(data);
-                channel.getLock().lock();
-                try {
-                    channel.countOfBytes = countOfBytes;
-                    System.arraycopy(data, 0, channel.data,0, countOfBytes);
-                    channel.getCondtion();
-                    channel.notifyAll();
-                } finally {
-                    channel.getLock().unlock();
+                if (countOfBytes > 0) {
+                    channel.getLock().lock();
+                    try {
+                        channel.countOfBytes = countOfBytes;
+                        System.arraycopy(data, 0, channel.data, 0, countOfBytes);
+                        channel.getCondtion();
+                        channel.notifyAll();
+                    } finally {
+                        channel.getLock().unlock();
+                    }
                 }
             }
             //input.close();

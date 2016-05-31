@@ -2,13 +2,15 @@ package org;
 
 import java.io.*;
 import java.net.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Created by ?????? on 22.03.2016.
  */
 public abstract class Port implements Runnable{
 
-
+    static ExecutorService e = Executors.newCachedThreadPool();
     protected final Channel channel;
 
 

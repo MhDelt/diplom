@@ -13,10 +13,10 @@ import java.util.concurrent.locks.ReentrantLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
- * Created by Михаил on 24.05.2016.
+ * Created by пїЅпїЅпїЅпїЅпїЅпїЅ on 24.05.2016.
  */
 public class Channel implements Runnable {
-
+    public static final int REQUEST_PORT = 3100;
     ExecutorService e = Executors.newCachedThreadPool();
     public static final int BUFFER_SIZE = 1024;
     private final int inPortNum;
@@ -59,10 +59,8 @@ public class Channel implements Runnable {
                 Socket socket = srv.accept();
                 PortFactory factory = PortFactory.getFactory(channelType);
                 inPort = factory.getInport(this, socket);
-                e.execute(inPort);
                 if (outPort.isEmpty()) {
                     OutPort outport = factory.getOutport(this);
-                    e.execute(outport);
                     outPort.add(outport);
                 }
 
@@ -95,17 +93,8 @@ public class Channel implements Runnable {
         return readWriteLock;
     }
 
-    public void setReadWriteLock(ReentrantReadWriteLock readWriteLock) {
-        this.readWriteLock = readWriteLock;
-    }
-
-
     public ReentrantLock getLock() {
         return lock;
-    }
-
-    public void setLock(ReentrantLock lock) {
-        this.lock = lock;
     }
 
 
@@ -113,7 +102,8 @@ public class Channel implements Runnable {
         return condtion;
     }
 
-    public void setCondtion(Condition condtion) {
-        this.condtion = condtion;
+
+    public String getName() {
+        return name;
     }
 }

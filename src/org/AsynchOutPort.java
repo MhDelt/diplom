@@ -4,7 +4,7 @@ import java.net.Socket;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
- * Created by Михаил on 24.05.2016.
+ * Created by пїЅпїЅпїЅпїЅпїЅпїЅ on 24.05.2016.
  */
 public class AsynchOutPort extends OutPort {
 
@@ -13,6 +13,7 @@ public class AsynchOutPort extends OutPort {
 
     public AsynchOutPort(Channel channel, Socket socket) {
         super(channel, socket);
+        e.execute(this);
     }
 
     @Override

@@ -3,7 +3,7 @@ package org;
 import java.net.Socket;
 
 /**
- * Created by Михаил on 24.05.2016.
+ * Created by пїЅпїЅпїЅпїЅпїЅпїЅ on 24.05.2016.
  */
 public class SynchOutPort extends OutPort {
 
@@ -11,7 +11,7 @@ public class SynchOutPort extends OutPort {
     volatile int countOfBytes; //real size of data
     public SynchOutPort(Channel channel, Socket socket) {
         super(channel, socket);
-
+        e.execute(this);
     }
 
 

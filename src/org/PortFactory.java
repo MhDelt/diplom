@@ -8,7 +8,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 /**
- * Created by Михаил on 24.05.2016.
+ * Created by пїЅпїЅпїЅпїЅпїЅпїЅ on 24.05.2016.
  */
 public abstract class PortFactory {
 
@@ -49,23 +49,35 @@ public abstract class PortFactory {
     static PortFactory synch = new PortFactory() {
         @Override
         public InPort getInport(Channel channel, Socket socket) {
-            return null;
+            return new SynchInPort(channel, socket);
         }
 
         @Override
         public OutPort getOutport(Channel channel) {
-            return null;
+            Socket socket = null;
+            try {
+                socket = new Socket(channel.getOutputAddress(), channel.getOutPortNum());
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+            return new SynchOutPort(channel, socket);
         }
     };
     static PortFactory asynch = new PortFactory() {
         @Override
         public InPort getInport(Channel channel, Socket socket) {
-            return null;
+            return new AsynchInPort(channel, socket);
         }
 
         @Override
         public OutPort getOutport(Channel channel) {
-            return null;
+            Socket socket = null;
+            try {
+                socket = new Socket(channel.getOutputAddress(), channel.getOutPortNum());
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+            return new AsynchOutPort(channel, socket);
         }
     };
 
@@ -75,6 +87,17 @@ public abstract class PortFactory {
         map.put(PortType.SYNCHRONOUS, synch);
         map.put(PortType.DIRECT, direct);
         map.put(PortType.ECHO,echo);
+        map.put(PortType.BY_REQUEST, new PortFactory() {
+            @Override
+            public InPort getInport(Channel channel, Socket socket) {
+                return new AsynchInPort(channel, socket);
+            }
+
+            @Override
+            public OutPort getOutport(Channel channel) {
+                return ByRequestOutPort.getPort(channel);
+            }
+        });
     }
     public static PortFactory getFactory(PortType channelType){
         return map.get(channelType);

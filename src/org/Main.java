@@ -16,7 +16,9 @@ public class Main{
     }
 
     private static void createChannel(String adr) {
-        Channel c = new Channel(adr,"ch1",3128,3129,adr, PortType.ECHO,20);
+        int initChannelPort = 3128;
+        int outPortNum = 3129;
+        Channel c = new Channel(adr,"ch1", initChannelPort, outPortNum, adr, PortType.ECHO,20);
         c.run();
     }
 }

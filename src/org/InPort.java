@@ -12,6 +12,7 @@ public class InPort extends Port {
     InPort(Channel channel, Socket socket) {
         super(channel);
         this.socket = socket;
+        e.execute(this);
     }
 
     public void run() {

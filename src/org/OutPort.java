@@ -5,7 +5,7 @@ import java.io.OutputStream;
 import java.net.Socket;
 
 /**
- * Created by Михаил on 24.05.2016.
+ * Created by пїЅпїЅпїЅпїЅпїЅпїЅ on 24.05.2016.
  */
 public class OutPort extends Port {
 
@@ -17,7 +17,7 @@ public class OutPort extends Port {
         this.socket = socket;
         OutputStream temp = null;
         try {
-             temp = this.socket.getOutputStream();
+             temp = (socket != null)?this.socket.getOutputStream(): null;
         } catch (IOException e) {
             e.printStackTrace();
         }

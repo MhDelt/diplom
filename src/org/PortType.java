@@ -1,8 +1,8 @@
 package org;
 
 /**
- * Created by Михаил on 24.05.2016.
+ * Created by пїЅпїЅпїЅпїЅпїЅпїЅ on 24.05.2016.
  */
 public enum PortType {
-    SYNCHRONOUS, ASYNCHRONOUS, DIRECT, ECHO;
+    SYNCHRONOUS, ASYNCHRONOUS, DIRECT, ECHO, BY_REQUEST;
 }
