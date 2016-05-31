@@ -1,4 +1,4 @@
-package org;
+package sciTest;
 
 import java.io.IOException;
 import java.net.Socket;
