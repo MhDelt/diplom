@@ -1,0 +1,2 @@
+exec('sendBySocket.sci')
+SOCKET_open(1,"localhost",7777);
