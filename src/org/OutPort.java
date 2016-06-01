@@ -9,6 +9,7 @@ import java.net.Socket;
  */
 public class OutPort extends Port {
 
+    protected volatile boolean isActive = true;
     private final Socket socket;
     private final OutputStream output;
 

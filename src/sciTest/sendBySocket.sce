@@ -3,7 +3,7 @@ function [res]=sendBySocket(t, u1)
     //    SOCKET_open(1,"localhost",3128);
     //    vb_one="1"
     //end
-    SOCKET_write(1, '1');
-    res= socket_read(1);
+    SOCKET_write(1, string(u1));
+    res= SOCKET_read(1);
     res=strtod(res(1));
 endfunction

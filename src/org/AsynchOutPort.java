@@ -8,6 +8,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  */
 public class AsynchOutPort extends OutPort {
 
+
     volatile byte data[] = new byte[Channel.BUFFER_SIZE]; //data
     volatile int countOfBytes; //real size of data
 
@@ -18,7 +19,7 @@ public class AsynchOutPort extends OutPort {
 
     @Override
     public void run() {
-        while (channel.isActive()) {
+        while (this.isActive && channel.isActive()) {
             ReentrantReadWriteLock.ReadLock readLock = channel.getReadWriteLock().readLock();
             readLock.lock();
             try {
@@ -32,4 +33,6 @@ public class AsynchOutPort extends OutPort {
             write(data, countOfBytes);
         }
     }
+
+
 }

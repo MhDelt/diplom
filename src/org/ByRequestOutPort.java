@@ -55,7 +55,7 @@ public class ByRequestOutPort extends OutPort {
 
     @Override
     public void run() {
-        while (channel.isActive()) {
+        while (this.isActive && channel.isActive()) {
             try {
                 if(inputStream.available() > 0) {
                     int count = inputStream.read(buffer, 0, inputStream.available());

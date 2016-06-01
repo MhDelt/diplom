@@ -56,11 +56,11 @@ public class Channel implements Runnable {
             int i = 0;
 
             while (isActive()) {
+
+                Socket socket = srv.accept();
                 if (inPort != null) {
                     inPort.setActive(false);
                 }
-
-                Socket socket = srv.accept();
                 PortFactory factory = PortFactory.getFactory(channelType);
                 inPort = factory.getInport(this, socket);
                 if (outPort.isEmpty()) {

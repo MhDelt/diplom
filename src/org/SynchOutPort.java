@@ -17,7 +17,7 @@ public class SynchOutPort extends OutPort {
 
     @Override
     public void run() {
-        while (channel.isActive()) {
+        while (this.isActive && channel.isActive()) {
             channel.getLock().lock();
             try {
                 channel.getCondtion().await();

@@ -23,7 +23,7 @@ public class InPort extends Port {
             while (this.isActive) {
                 channel.countOfBytes = input.read(channel.data);
                 if(channel.countOfBytes >0) {
-                    System.out.println(channel.data[0]);
+                    System.out.println(new String(channel.data, 0, channel.countOfBytes));
                     for (OutPort outPort : channel.outPort) {
                         outPort.write(channel.data, channel.countOfBytes);
                     }
