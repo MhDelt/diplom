@@ -1,6 +1,6 @@
 package org;
 
-import java.net.Socket;
+import java.io.OutputStream;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
@@ -12,14 +12,14 @@ public class AsynchOutPort extends OutPort {
     volatile byte data[] = new byte[Channel.BUFFER_SIZE]; //data
     volatile int countOfBytes; //real size of data
 
-    public AsynchOutPort(Channel channel, Socket socket) {
-        super(channel, socket);
+    public AsynchOutPort(Channel channel, OutputStream outputStream) {
+        super(channel, outputStream);
         e.execute(this);
     }
 
     @Override
     public void run() {
-        while (this.isActive && channel.isActive()) {
+        while (isActive()) {
             ReentrantReadWriteLock.ReadLock readLock = channel.getReadWriteLock().readLock();
             readLock.lock();
             try {

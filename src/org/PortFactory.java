@@ -1,6 +1,7 @@
 package org;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
@@ -13,80 +14,62 @@ import java.util.concurrent.Executors;
 public abstract class PortFactory {
 
     static Executor e = Executors.newCachedThreadPool();
-    static PortFactory echo = new PortFactory() {
-        @Override
-        public InPort getInport(Channel channel, Socket socket) {
-            InPort inPort = new InPort(channel, socket);
-            return inPort;
-        }
 
-        @Override
-        public OutPort getOutport(Channel channel) {
-            return new OutPort(channel, channel.inPort.socket);
+    private static OutputStream getOutputStreamForSameSocket(Channel channel)  {
+        try {
+            return channel.inPort.socket.getOutputStream();
+        } catch (IOException e1) {
+            throw new IllegalStateException(e1);
         }
-    };
+    }
 
-    static PortFactory direct = new PortFactory() {
-        @Override
-        public InPort getInport(Channel channel, Socket socket) {
-
-            InPort inPort = new InPort(channel, socket);
-            return inPort;
+    private static OutputStream getOutputSreamForExtSocket(Channel channel) {
+        Socket socket;
+        OutputStream outputStream = null;
+        try {
+            socket = new Socket(channel.getOutputAddress(), channel.getOutPortNum());
+            outputStream = socket.getOutputStream();
+        } catch (IOException e1) {
+            e1.printStackTrace();
         }
-
-        @Override
-        public OutPort getOutport(Channel channel) {
-            Socket socket = null;
-            try {
-                socket = new Socket(channel.getOutputAddress(), channel.getOutPortNum());
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            }
-            return new OutPort(channel, socket);
-        }
-    };
-
-    static PortFactory synch = new PortFactory() {
-        @Override
-        public InPort getInport(Channel channel, Socket socket) {
-            return new SynchInPort(channel, socket);
-        }
-
-        @Override
-        public OutPort getOutport(Channel channel) {
-            Socket socket = null;
-            try {
-                socket = new Socket(channel.getOutputAddress(), channel.getOutPortNum());
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            }
-            return new SynchOutPort(channel, socket);
-        }
-    };
-    static PortFactory asynch = new PortFactory() {
-        @Override
-        public InPort getInport(Channel channel, Socket socket) {
-            return new AsynchInPort(channel, socket);
-        }
-
-        @Override
-        public OutPort getOutport(Channel channel) {
-            Socket socket = null;
-            try {
-                socket = new Socket(channel.getOutputAddress(), channel.getOutPortNum());
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            }
-            return new AsynchOutPort(channel, socket);
-        }
-    };
+        return outputStream;
+    }
 
     private static Map<PortType, PortFactory> map = new HashMap<>();
     static {
-        map.put(PortType.ASYNCHRONOUS, asynch);
-        map.put(PortType.SYNCHRONOUS, synch);
-        map.put(PortType.DIRECT, direct);
-        map.put(PortType.ECHO,echo);
+        map.put(PortType.SYNCHRONOUS, new PortFactory() {
+            @Override
+            public InPort getInport(Channel channel, Socket socket) {
+                return new SynchInPort(channel, socket);
+            }
+
+            @Override
+            public OutPort getOutport(Channel channel) {
+                return new SynchOutPort(channel, getOutputSreamForExtSocket(channel));
+            }
+        });
+        map.put(PortType.ASYNCHRONOUS, new PortFactory() {
+            @Override
+            public InPort getInport(Channel channel, Socket socket) {
+                return new AsynchInPort(channel, socket);
+            }
+
+            @Override
+            public OutPort getOutport(Channel channel) {
+                return new AsynchOutPort(channel, getOutputSreamForExtSocket(channel));
+            }
+        });
+        map.put(PortType.DIRECT, new PortFactory() {
+            @Override
+            public InPort getInport(Channel channel, Socket socket) {
+                return new InPort(channel, socket);
+            }
+
+            @Override
+            public OutPort getOutport(Channel channel) {
+                return new OutPort(channel, getOutputSreamForExtSocket(channel));
+            }
+        });
         map.put(PortType.BY_REQUEST, new PortFactory() {
             @Override
             public InPort getInport(Channel channel, Socket socket) {
@@ -96,6 +79,40 @@ public abstract class PortFactory {
             @Override
             public OutPort getOutport(Channel channel) {
                 return ByRequestOutPort.getPort(channel);
+            }
+        });
+        map.put(PortType.ASYNCHRONOUS_ECHO, new PortFactory() {
+            @Override
+            public InPort getInport(Channel channel, Socket socket) {
+                return new AsynchInPort(channel, socket);
+            }
+
+            @Override
+            public OutPort getOutport(Channel channel) {
+                return new AsynchOutPort(channel, getOutputStreamForSameSocket(channel));
+            }
+        });
+        map.put(PortType.SYNCHRONOUS_ECHO, new PortFactory() {
+            @Override
+            public InPort getInport(Channel channel, Socket socket) {
+                return new SynchInPort(channel, socket);
+            }
+
+            @Override
+            public OutPort getOutport(Channel channel) {
+                return new SynchOutPort(channel, getOutputStreamForSameSocket(channel));
+            }
+        });
+
+        map.put(PortType.DIRECT_ECHO, new PortFactory() {
+            @Override
+            public InPort getInport(Channel channel, Socket socket) {
+                return new InPort(channel, socket);
+            }
+
+            @Override
+            public OutPort getOutport(Channel channel) {
+                return new OutPort(channel, getOutputStreamForSameSocket(channel));
             }
         });
     }

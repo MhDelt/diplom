@@ -1,2 +1,3 @@
-exec('sendBySocket.sce')
+exec('echoBySocket.sce')
+//CHANNEL_MANAGER.addChannel(new Channel(adr,"echo", initChannelPort, outPortNum, adr, PortType.DIRECT_ECHO,20));
 SOCKET_open(1,"localhost",3128);

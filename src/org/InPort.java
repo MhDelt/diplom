@@ -8,7 +8,7 @@ import java.net.Socket;
  */
 public class InPort extends Port {
     Socket socket;
-    boolean isActive = true;
+
 
     InPort(Channel channel, Socket socket) {
         super(channel);
@@ -20,11 +20,11 @@ public class InPort extends Port {
 
         try {
             InputStream input = socket.getInputStream();
-            while (this.isActive) {
+            while (isActive()) {
                 channel.countOfBytes = input.read(channel.data);
                 if(channel.countOfBytes >0) {
                     System.out.println(new String(channel.data, 0, channel.countOfBytes));
-                    for (OutPort outPort : channel.outPort) {
+                    for (OutPort outPort : channel.outPorts) {
                         outPort.write(channel.data, channel.countOfBytes);
                     }
                 }
@@ -36,11 +36,5 @@ public class InPort extends Port {
 
     }
 
-    public boolean isActive() {
-        return isActive;
-    }
 
-    public void setActive(boolean active) {
-        isActive = active;
-    }
 }

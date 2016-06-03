@@ -1,4 +1,4 @@
-function [res]=sendBySocket(t, u1)
+function [res]=echoBySocket(t,u1)
     //if (!exist(vb_one)) then
     //    SOCKET_open(1,"localhost",3128);
     //    vb_one="1"

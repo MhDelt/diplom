@@ -24,16 +24,16 @@ public class Channel implements Runnable {
     private final String outputAddress;
     private final PortType channelType;
     InPort inPort;
-    List<OutPort> outPort = new ArrayList<>();
+    List<OutPort> outPorts = new ArrayList<>();
     private ServerSocket srv;
     private String name;
 
     volatile byte data[] = new byte[BUFFER_SIZE]; //data
     volatile int countOfBytes; //real size of data
     private boolean active = true;
-    private ReentrantReadWriteLock readWriteLock;
-    private ReentrantLock lock;
-    private Condition condtion;
+    private ReentrantReadWriteLock readWriteLock = new ReentrantReadWriteLock();
+    private ReentrantLock lock = new ReentrantLock();
+    private Condition condtion = lock.newCondition();
 
     public Channel(String virtBusAddress, String name, int inPortNum, int outPortNum, String outputAddres, PortType channelType, Integer rate) {
         this.name = name;
@@ -63,10 +63,10 @@ public class Channel implements Runnable {
                 }
                 PortFactory factory = PortFactory.getFactory(channelType);
                 inPort = factory.getInport(this, socket);
-                if (outPort.isEmpty()) {
-                    OutPort outport = factory.getOutport(this);
-                    outPort.add(outport);
-                }
+                outPorts.stream().forEach(outPort1 -> outPort1.setActive(false));
+                outPorts.clear();
+                outPorts.add(factory.getOutport(this));
+
 
                 System.out.print(i + " "+data+"\n");
                 i++;
@@ -83,6 +83,8 @@ public class Channel implements Runnable {
     }
 
     public void setActive(boolean active) {
+        inPort.setActive(false);
+        outPorts.stream().forEach(outPort1 -> outPort1.setActive(false));
         this.active = active;
     }
 

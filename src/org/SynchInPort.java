@@ -17,7 +17,7 @@ public class SynchInPort extends InPort {
 
         try {
             InputStream input = socket.getInputStream();
-            while (channel.isActive()) {
+            while (isActive()) {
 
                 countOfBytes = input.read(data);
                 if (countOfBytes > 0) {
@@ -25,8 +25,7 @@ public class SynchInPort extends InPort {
                     try {
                         channel.countOfBytes = countOfBytes;
                         System.arraycopy(data, 0, channel.data, 0, countOfBytes);
-                        channel.getCondtion();
-                        channel.notifyAll();
+                        channel.getCondtion().signalAll();
                     } finally {
                         channel.getLock().unlock();
                     }

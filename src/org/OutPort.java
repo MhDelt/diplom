@@ -9,20 +9,12 @@ import java.net.Socket;
  */
 public class OutPort extends Port {
 
-    protected volatile boolean isActive = true;
-    private final Socket socket;
+
     private final OutputStream output;
 
-    public OutPort(Channel channel, Socket socket) {
+    public OutPort(Channel channel, OutputStream outputStream) {
         super(channel);
-        this.socket = socket;
-        OutputStream temp = null;
-        try {
-             temp = (socket != null)?this.socket.getOutputStream(): null;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        output = temp;
+        this.output = outputStream;
     }
 
 

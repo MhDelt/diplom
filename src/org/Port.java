@@ -10,9 +10,10 @@ import java.util.concurrent.Executors;
  */
 public abstract class Port implements Runnable{
 
-    static ExecutorService e = Executors.newCachedThreadPool();
+    public static ExecutorService e = Executors.newCachedThreadPool();
     protected final Channel channel;
 
+    protected boolean isActive = true;
 
     public void run() {
        /* try {
@@ -44,5 +45,11 @@ public abstract class Port implements Runnable{
         this.channel = channel;
     }
 
+    public boolean isActive() {
+        return isActive;
+    }
 
+    public void setActive(boolean active) {
+        isActive = active;
+    }
 }
