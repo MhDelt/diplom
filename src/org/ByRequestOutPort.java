@@ -101,6 +101,7 @@ public class ByRequestOutPort extends OutPort {
                         int count = in.read(buffer, 0, in.available());
                         String str = new String(buffer, 0, count);
                         str = str.replace("\r", "").replace("\n", "");
+                        System.out.println("Request channel " + str);
                         Pair<Channel, RequestListener> listenerPair = channelMap.get(str);
                         if (listenerPair.getValue() == null) {
                             channelMap.put(listenerPair.getKey().getName(), new Pair<>(listenerPair.getKey(), this));
@@ -117,11 +118,13 @@ public class ByRequestOutPort extends OutPort {
                         } finally {
                             readLock.unlock();
                         }
-                        System.out.println(new String(data,0, countOfBytes));
+                        System.out.println("read for channel" + channel.getName() + " data " + new String(data,0, countOfBytes));
                         out.write(data, 0, countOfBytes);
                     }
                 } catch (IOException e1) {
                     e1.printStackTrace();
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         }

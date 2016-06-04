@@ -17,8 +17,11 @@ public class Main{
         int initChannelPort = 3128;
         int outPortNum = 3129;
 //        CHANNEL_MANAGER.addChannel(new Channel(adr, "echo", initChannelPort, outPortNum, adr, PortType.DIRECT_ECHO,20));
-//        CHANNEL_MANAGER.addChannel(new Channel(adr, "synch", 3130, 3131, adr, PortType.SYNCHRONOUS_ECHO, 20));
+        //CHANNEL_MANAGER.addChannel(new Channel(adr, "synch", 3130, 3131, adr, PortType.SYNCHRONOUS_ECHO, 20));
 //        CHANNEL_MANAGER.addChannel(new Channel(adr, "asynch", 3134, 3135, adr, PortType.ASYNCHRONOUS_ECHO, 20));
-        CHANNEL_MANAGER.addChannel(new Channel(adr, "byrequest", 3136, 3137, adr, PortType.BY_REQUEST, 20));
+        //CHANNEL_MANAGER.addChannel(new Channel(adr, "byrequest", 3136, 3137, adr, PortType.BY_REQUEST, 20));
+
+        CHANNEL_MANAGER.addChannel(new Channel(adr, "control", 3140, 3141, adr, PortType.BY_REQUEST, 20));
+        CHANNEL_MANAGER.addChannel(new Channel(adr, "feedback", 3142, 3143, adr, PortType.BY_REQUEST, 20));
     }
 }
