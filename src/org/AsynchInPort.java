@@ -5,7 +5,7 @@ import java.net.Socket;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
- * Created by Михаил on 24.05.2016.
+ * Created by пїЅпїЅпїЅпїЅпїЅпїЅ on 24.05.2016.
  */
 public class AsynchInPort extends InPort {
     volatile byte data[] = new byte[Channel.BUFFER_SIZE]; //data
@@ -20,17 +20,21 @@ public class AsynchInPort extends InPort {
         try {
             InputStream input = socket.getInputStream();
             while (channel.isActive()) {
+                int available = input.available();
+                if (available>0) {
+                    countOfBytes = input.read(data);
 
-                countOfBytes = input.read(data);
-                ReentrantReadWriteLock.WriteLock writeLock = channel.getReadWriteLock().writeLock();
-                writeLock.lock();
-                try {
-                    channel.countOfBytes = countOfBytes;
-                    System.arraycopy(data, 0, channel.data,0, countOfBytes);
-                } finally {
-                    writeLock.unlock();
+                    ReentrantReadWriteLock.WriteLock writeLock = channel.getReadWriteLock().writeLock();
+                    writeLock.lock();
+                    try {
+                        channel.countOfBytes = countOfBytes;
+                        System.arraycopy(data, 0, channel.data, 0, countOfBytes);
+                    } finally {
+                        writeLock.unlock();
+                    }
                 }
             }
+
             //input.close();
         } catch (Exception e) {
             System.out.print("init error: " + e);
