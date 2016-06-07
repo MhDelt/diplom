@@ -1,5 +1,6 @@
 package org;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
 
@@ -21,13 +22,12 @@ public class InPort extends Port {
         try {
             InputStream input = socket.getInputStream();
             while (isActive()) {
-                channel.countOfBytes = input.read(channel.data);
-                if(channel.countOfBytes >0) {
+                channel.countOfBytes = readData(channel.data, input);
                     System.out.println(new String(channel.data, 0, channel.countOfBytes));
                     for (OutPort outPort : channel.outPorts) {
                         outPort.write(channel.data, channel.countOfBytes);
                     }
-                }
+
             }
             //input.close();
         } catch (Exception e) {
@@ -37,4 +37,20 @@ public class InPort extends Port {
     }
 
 
+    public static int readData(byte[] data, InputStream input) throws IOException {
+        int index = 0;
+        do {
+            data[index] = (byte) input.read();
+            if (data[index] == -1) {
+                return 0;
+            }
+            if (data[index++] == (byte) '\r') {
+                data[index++] = (byte) input.read();// \n
+                //special behavior for scilab
+                input.read();// \r
+                input.read();// \n
+                return index;
+            }
+        } while (true);
+    }
 }

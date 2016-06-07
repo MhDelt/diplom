@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Scanner;
 import java.util.StringJoiner;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -95,12 +96,18 @@ public class ByRequestOutPort extends OutPort {
         public void run() {
             byte data[] = new byte[BUFFER_SIZE];
             Channel channel = null;
+            Scanner scanner = new Scanner(in);
             while (isActive) {
                 try {
-                    if (in.available() > 0) {
-                        int count = in.read(buffer, 0, in.available());
-                        String str = new String(buffer, 0, count);
-                        str = str.replace("\r", "").replace("\n", "");
+
+//                    if (in.available() > 0) {
+//                        int count = in.read(buffer, 0, in.available());
+//                        String str = new String(buffer, 0, count);
+//                        str = str.replace("\r", "").replace("\n", "");
+                    String str = scanner.nextLine();
+                    if (str.isEmpty()) {
+                        continue;//for scilab which send two delimeters in the package
+                    }
                         System.out.println("Request channel " + str);
                         Pair<Channel, RequestListener> listenerPair = channelMap.get(str);
                         if (listenerPair.getValue() == null) {
@@ -120,7 +127,7 @@ public class ByRequestOutPort extends OutPort {
                         }
                         System.out.println("read for channel" + channel.getName() + " data " + new String(data,0, countOfBytes));
                         out.write(data, 0, countOfBytes);
-                    }
+
                 } catch (IOException e1) {
                     e1.printStackTrace();
                 } catch (Exception e) {

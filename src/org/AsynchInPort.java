@@ -19,11 +19,8 @@ public class AsynchInPort extends InPort {
     public void run() {
         try {
             InputStream input = socket.getInputStream();
-            while (channel.isActive()) {
-                int available = input.available();
-                if (available>0) {
-                    countOfBytes = input.read(data);
-
+            while (this.isActive()) {
+                    countOfBytes = readData(data, input);
                     ReentrantReadWriteLock.WriteLock writeLock = channel.getReadWriteLock().writeLock();
                     writeLock.lock();
                     try {
@@ -32,7 +29,6 @@ public class AsynchInPort extends InPort {
                     } finally {
                         writeLock.unlock();
                     }
-                }
             }
 
             //input.close();
